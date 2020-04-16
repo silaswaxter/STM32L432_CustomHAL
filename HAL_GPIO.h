@@ -1,29 +1,18 @@
 /*
 INSTRUCTIONS:  Create an object of type GPIO_Type.  Populate
 the struct's members with the configurations defined.
-
-IMPORTANT:  initPin() before configPin()      [clock turned on]
 */
 
 #ifndef HAL_GPIO
 #define HAL_GPIO
 
 #include "stm32l432xx.h"
+#include "RegisterMaskConstructors.h"
 
-//CODE READABILITY
+//Logic Levels
 #define HIGH 1
-#define LOW 0
-
-//GPIO ENABLE PORT CLOCKS
-#define GPIO_ENABLE_PORTA RCC->AHB2ENR |= (1<<0)
-#define GPIO_ENABLE_PORTB RCC->AHB2ENR |= (1<<1)
-#define GPIO_ENABLE_PORTC RCC->AHB2ENR |= (1<<2)
-				/*
-				#define GPIO_ENABLE_PORTD RCC->AHB2ENR |= (1<<3)
-				#define GPIO_ENABLE_PORTE RCC->AHB2ENR |= (1<<4)
-				#define GPIO_ENABLE_PORTH RCC->AHB2ENR |= (1<<7)
-				*/
-
+#define LOW 0			
+				
 //GPIO MODES
 #define GPIO_MODE_INPUT (0x00)
 #define GPIO_MODE_OUTPUT (0x01)
@@ -73,11 +62,6 @@ IMPORTANT:  initPin() before configPin()      [clock turned on]
 
 #define GPIO_ALTFUNC_SECTLEN 4
 
-//GPIO BIT OFFSET MACROS
-#define SET_MASK(config, pin, SectorLength) (config<<(SectorLength*pin))
-#define CLEAR_MASK(config, pin, SectorLength) ((config ^ SECTOR_MASK(SectorLength))<<(SectorLength*pin))
-#define SECTOR_MASK(SectorLength) ((1<<SectorLength) - 1)
-
 typedef struct
 {
 	GPIO_TypeDef *port;		
@@ -89,14 +73,15 @@ typedef struct
 	uint32_t altFunction;		//configures alternate function on pin
 } GPIO_Type;
 
+static uint32_t portRCCEnabled(uint32_t gpioPort_RCCENR_Pos);
+static void enGPIOPortClock(GPIO_TypeDef *port);
 static void set_mode(GPIO_Type *IOPin);
 static void set_outputType(GPIO_Type *IOPin);
 static void set_outputSpeed(GPIO_Type *IOPin);
 static void set_pull(GPIO_Type *IOPin);
 static void set_altFunc(GPIO_Type *IOPin);
-	
-void configPin(GPIO_Type *IOPin);
-void initPin(GPIO_Type *IOPin);
-void writePin(GPIO_Type *IOPin, uint32_t state);
 
-#endif
+void gpio_init(GPIO_Type *IOPin);
+void gpio_writePin(GPIO_Type *IOPin, uint32_t state);
+
+#endif //HAL_GPIO
