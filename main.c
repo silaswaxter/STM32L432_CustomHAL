@@ -4,29 +4,16 @@
 #include "HAL_EXTI.h"
 #include "ClockControl.h"
 
-#include "PLL.h"
-
 GPIO_Type led3;
 EXTI_Type extiB1;
 void LEDInteruptInit(void);
+void SystemClockInit(void);
 
 int main()
 {	
-	PLL_T PLLTest;
-	PLLTest.PLLClockSource = PLLClockSource_HSE;
-	PLLTest.PLLM = PLLM_1;
-	PLLTest.PLLN = 20;
-	PLLTest.PLLR = PLLR_2;
+	SystemClockInit();		//Set SYSCLK @ 80MHz
 	
-	SystemClock_T HSEPLL80;
-	HSEPLL80.AHBPrescaler = AHB_1;
-	HSEPLL80.APB1Prescaler = APB_1;
-	HSEPLL80.APB2Prescaler = APB_1;
-	HSEPLL80.PLL_Configuration = &PLLTest;
-	HSEPLL80.SystemClockSource = ClockSource_PLL;
-	HSEPLL80.TargetSystemClockSpeedMHZ = 80;
 	
-	configSystemClock(&HSEPLL80);
 	
 	
 	LEDInteruptInit();
@@ -44,6 +31,27 @@ void EXTI1_IRQHandler()
 	
 	//Turn On LED
 	gpio_writePin(&led3, HIGH);
+}
+
+void SystemClockInit(void)
+{
+	PLL_T PLLTest;
+	PLLTest.PLLClockSource = ClockSource_HSE;
+	//PLLTest.PLL_MSISpeed = MSI_8000;
+	PLLTest.PLLM = PLLM_1;
+	PLLTest.PLLN = 20;
+	PLLTest.PLLR = PLLR_2;
+	
+	SystemClock_T HSEPLL80;
+	HSEPLL80.AHBPrescaler = AHB_1;
+	HSEPLL80.APB1Prescaler = APB_1;
+	HSEPLL80.APB2Prescaler = APB_1;
+	HSEPLL80.PLL_Configuration = &PLLTest;
+	HSEPLL80.SystemClockSource = ClockSource_PLL;
+	//HSEPLL80.SYSCLK_MSISpeed = MSI_8000;
+	HSEPLL80.TargetSystemClockSpeedMHZ = 8;
+	
+	setSystemClock(&HSEPLL80);
 }
 
 void LEDInteruptInit(void)

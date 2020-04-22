@@ -443,16 +443,6 @@
               <FilePath>.\ClockControl.h</FilePath>
             </File>
             <File>
-              <FileName>PLL.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\PLL.c</FilePath>
-            </File>
-            <File>
-              <FileName>PLL.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\PLL.h</FilePath>
-            </File>
-            <File>
               <FileName>FlashFunctions.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FlashFunctions.c</FilePath>
@@ -491,6 +481,30 @@
       </component>
     </components>
     <files>
+      <file attr="config" category="sourceAsm" condition="ARMCC" name="Device\ARM\ARMCM0\Source\ARM\startup_ARMCM0.s" version="1.0.0">
+        <instance index="0" removed="1">RTE\Device\ARMCM0\startup_ARMCM0.s</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.2.0" condition="ARMCM0 CMSIS"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.6.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="sourceC" name="Device\ARM\ARMCM0\Source\system_ARMCM0.c" version="1.0.0">
+        <instance index="0" removed="1">RTE\Device\ARMCM0\system_ARMCM0.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.2.0" condition="ARMCM0 CMSIS"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.6.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="source" condition="STM32L432 ARMCC" name="Drivers\CMSIS\Device\ST\STM32L4xx\Source\Templates\arm\startup_stm32l432xx.s" version="1.3.1">
+        <instance index="0" removed="1">RTE\Device\STM32L432KBUx\startup_stm32l432xx.s</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.3.1" condition="STM32L4 CMSIS"/>
+        <package name="STM32L4xx_DFP" schemaVersion="1.6.0" url="https://www.keil.com/pack/" vendor="Keil" version="2.3.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="source" name="Drivers\CMSIS\Device\ST\STM32L4xx\Source\Templates\system_stm32l4xx.c" version="1.3.1">
+        <instance index="0" removed="1">RTE\Device\STM32L432KBUx\system_stm32l4xx.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.3.1" condition="STM32L4 CMSIS"/>
+        <package name="STM32L4xx_DFP" schemaVersion="1.6.0" url="https://www.keil.com/pack/" vendor="Keil" version="2.3.0"/>
+        <targetInfos/>
+      </file>
       <file attr="config" category="source" condition="STM32L432 ARMCC" name="Drivers\CMSIS\Device\ST\STM32L4xx\Source\Templates\arm\startup_stm32l432xx.s" version="1.3.1">
         <instance index="0">RTE\Device\STM32L432KCUx\startup_stm32l432xx.s</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.3.1" condition="STM32L4 CMSIS"/>

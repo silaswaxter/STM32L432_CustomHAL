@@ -2,10 +2,9 @@
 #define CLOCKCONTROL
 
 #include "stm32l432xx.h"
-#include "PLL.h"
 #include "FlashFunctions.h"
 
-typedef enum {
+typedef enum {							//values mapped to MSIRANGE bit config
 	MSI_100 = (0x00),
 	MSI_200 = (0x01),
 	MSI_400 = (0x02),
@@ -20,12 +19,13 @@ typedef enum {
 	MSI_48000 = (0x0B)
 } MSISpeed_T;
 
-
-typedef enum {
-	ClockSource_MSI,
-	ClockSource_HSI16,
-	ClockSource_HSE,
-	ClockSource_PLL
+typedef enum {							//Random defined values
+	ClockSource_MSI = (0x01),
+	ClockSource_HSI16 = (0x02),
+	ClockSource_HSE = (0x04),
+	ClockSource_PLL = (0x08),
+	ClockSource_LSE = (0xFF),
+	ClockSource_NotAvailable = (0x10)
 } ClockSource_T; 
 
 //AMBA
@@ -49,13 +49,41 @@ typedef enum {
 	APB_16 = (0x07)
 } APBPrescaler_T;
 
+//PLL
+typedef enum {
+	PLLM_1 = (0x00),
+	PLLM_2 = (0x01),
+	PLLM_3 = (0x02),
+	PLLM_4 = (0x03),
+	PLLM_5 = (0x04),
+	PLLM_6 = (0x05),
+	PLLM_7 = (0x06),
+	PLLM_8 = (0x07)
+} PLLM_T;
+
+typedef enum {
+	PLLR_2 = (0x00),
+	PLLR_4 = (0x01),
+	PLLR_6 = (0x02),
+	PLLR_8 = (0x03)
+} PLLR_T;
+
+typedef struct {
+	ClockSource_T PLLClockSource;
+	PLLM_T PLLM;
+	int PLLN;						//8 <= PLLN <= 86
+	PLLR_T PLLR;
+	
+	MSISpeed_T PLL_MSISpeed;
+	
+} PLL_T;
 
 typedef struct SystemClock_Type {
 	int TargetSystemClockSpeedMHZ;					//Used for # of Flash wait cycles
 	
 	PLL_T* PLL_Configuration;
 	
-	MSISpeed_T MSISpeed;
+	MSISpeed_T SYSCLK_MSISpeed;							//Used only when MSI is directly SYSCLK source (non-PLL)
 	
 	ClockSource_T SystemClockSource;
 	
@@ -64,9 +92,12 @@ typedef struct SystemClock_Type {
 	AHBPrescaler_T AHBPrescaler;
 } SystemClock_T;
 
-void configSystemClock(SystemClock_T* SystemClockConfig);
+void setSystemClock(SystemClock_T* SystemClockConfig);
 void enClock(ClockSource_T clockSource);
 void setMSIRANGE(MSISpeed_T speed);
-static void setSystemClockSource(ClockSource_T source);
+void setPLL(PLL_T* PLL_Config); 
+static void setSYSCLKSource(ClockSource_T clockSource);
+ClockSource_T getSYSCLKSource(void);
+ClockSource_T getPLLClockSource(void);
 
 #endif //ClockControl
