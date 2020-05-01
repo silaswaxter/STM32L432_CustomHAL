@@ -1,5 +1,5 @@
-#ifndef FLASHFUNCTIONS
-#define FLASHFUNCTIONS
+#ifndef FLASH_FUNCTIONS_H
+#define FLASH_FUNCTIONS_H
 
 #include "stm32l432xx.h"
 
@@ -7,4 +7,4 @@
 
 void setFlashLatency(int tgtSysClockSpeedMHz);
 
-#endif //FLASHFUNCTIONS
+#endif //FLASH_FUNCTIONS_H

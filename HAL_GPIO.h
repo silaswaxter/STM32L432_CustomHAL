@@ -3,8 +3,8 @@ INSTRUCTIONS:  Create an object of type GPIO_Type.  Populate
 the struct's members with the configurations defined.
 */
 
-#ifndef HAL_GPIO
-#define HAL_GPIO
+#ifndef HAL_GPIO_H
+#define HAL_GPIO_H
 
 #include "stm32l432xx.h"
 #include "RegisterMaskConstructors.h"
@@ -43,23 +43,6 @@ the struct's members with the configurations defined.
 #define GPIO_PULL_SECTLEN 2
 
 //GPIO ALT_FUNCTION
-#define GPIO_ALTFUNC_AF0 (0x00)
-#define GPIO_ALTFUNC_AF1 (0x01)
-#define GPIO_ALTFUNC_AF2 (0x02)
-#define GPIO_ALTFUNC_AF3 (0x03)
-#define GPIO_ALTFUNC_AF4 (0x04)
-#define GPIO_ALTFUNC_AF5 (0x05)
-#define GPIO_ALTFUNC_AF6 (0x06)
-#define GPIO_ALTFUNC_AF7 (0x07)
-#define GPIO_ALTFUNC_AF8 (0x08)
-#define GPIO_ALTFUNC_AF9 (0x09)
-#define GPIO_ALTFUNC_AF10 (0x0A)
-#define GPIO_ALTFUNC_AF11 (0x0B)
-#define GPIO_ALTFUNC_AF12 (0x0C)
-#define GPIO_ALTFUNC_AF13 (0x0D)
-#define GPIO_ALTFUNC_AF14 (0x0E)
-#define GPIO_ALTFUNC_AF15 (0x0F)
-
 #define GPIO_ALTFUNC_SECTLEN 4
 
 typedef struct
@@ -70,7 +53,7 @@ typedef struct
 	uint32_t output_Type; 	//push-pull vs open-drain
 	uint32_t output_Speed;	//speed of output GPIO pin
 	uint32_t pull;					//pull-up/pull-down resistors
-	uint32_t altFunction;		//configures alternate function on pin
+	uint32_t altFunctionNum;		//configures alternate function on pin
 } GPIO_Type;
 
 static uint32_t portRCCEnabled(uint32_t gpioPort_RCCENR_Pos);
@@ -84,4 +67,4 @@ static void set_altFunc(GPIO_Type *IOPin);
 void gpio_init(GPIO_Type *IOPin);
 void gpio_writePin(GPIO_Type *IOPin, uint32_t state);
 
-#endif //HAL_GPIO
+#endif //HAL_GPIO_H

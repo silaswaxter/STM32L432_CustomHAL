@@ -144,93 +144,10 @@ static void set_altFunc(GPIO_Type *IOPin)
 		
 	}
 	
-	switch(IOPin->altFunction)
-	{
-		case GPIO_ALTFUNC_AF0:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF0, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF0, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF1:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF1, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF1, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF2:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF2, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF2, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF3:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF3, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF3, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF4:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF4, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF4, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF5:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF5, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF5, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF6:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF6, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF6, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF7:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF7, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF7, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF8:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF8, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF8, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF9:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF9, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF9, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF10:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF10, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF10, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF11:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF11, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF11, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF12:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF12, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF12, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF13:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF13, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF13, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF14:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF14, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF14, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-		
-		case GPIO_ALTFUNC_AF15:
-			IOPin->port->AFR[AFR_Designator] |= setMask(GPIO_ALTFUNC_AF15, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
-			IOPin->port->AFR[AFR_Designator] &= ~(clearMask(GPIO_ALTFUNC_AF15, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
-			break;
-	}
+	IOPin->port->AFR[AFR_Designator] |= setMask(IOPin->altFunctionNum, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN);
+	IOPin->port->AFR[AFR_Designator] &= ~(clearMask(IOPin->altFunctionNum, UpLowRegCorrected_Pin, GPIO_ALTFUNC_SECTLEN));
+	
 }
-
-//
-//-----------Public Functions-------------
-//
 void gpio_init(GPIO_Type *IOPin)
 {
 	//Enable RCC for GPIO Port Peripheral

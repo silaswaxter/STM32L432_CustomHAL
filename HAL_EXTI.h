@@ -1,9 +1,8 @@
-#ifndef HAL_EXTI
-#define HAL_EXTI
+#ifndef HAL_EXTI_H
+#define HAL_EXTI_H
 
 #include "stm32l432xx.h"
 #include "HAL_SYSCFG.h"
-#include "RegisterMaskConstructors.h"
 
 //GPIO must be configured as input, output or alternate function mode
 //to use EXTI
@@ -32,4 +31,4 @@ static void enFallingEdge(uint32_t EXTI_Line);
 void exti_init(EXTI_Type* EXTI_object, IRQn_Type irqNumber);
 void exti_clearPending(uint32_t EXTI_Line);
 
-#endif //HAL_EXTI
+#endif //HAL_EXTI_H

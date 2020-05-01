@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -451,6 +451,26 @@
               <FileName>FlashFunctions.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FlashFunctions.h</FilePath>
+            </File>
+            <File>
+              <FileName>Custom_USART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Custom_USART.c</FilePath>
+            </File>
+            <File>
+              <FileName>Custom_USART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Custom_USART.h</FilePath>
+            </File>
+            <File>
+              <FileName>Custom_DMA.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Custom_DMA.h</FilePath>
+            </File>
+            <File>
+              <FileName>Custom_DMA.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Custom_DMA.c</FilePath>
             </File>
           </Files>
         </Group>

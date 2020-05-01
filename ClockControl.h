@@ -1,5 +1,5 @@
-#ifndef CLOCKCONTROL
-#define CLOCKCONTROL
+#ifndef CLOCK_CONTROL_H
+#define CLOCK_CONTROL_H
 
 #include "stm32l432xx.h"
 #include "FlashFunctions.h"
@@ -100,4 +100,4 @@ static void setSYSCLKSource(ClockSource_T clockSource);
 ClockSource_T getSYSCLKSource(void);
 ClockSource_T getPLLClockSource(void);
 
-#endif //ClockControl
+#endif //CLOCK_CONTROL_H

@@ -1,5 +1,5 @@
-#ifndef HAL_SYSCFG
-#define HAL_SYSCFG
+#ifndef HAL_SYSCFG_H
+#define HAL_SYSCFG_H
 
 #include "stm32l432xx.h"
 #include "RegisterMaskConstructors.h"
@@ -10,4 +10,4 @@ static void enSYSCFG_Clock(void);
 
 void enEXTI_GPIO(GPIO_TypeDef *GPIO_Port, uint32_t GPIO_Pin);
 				
-#endif //HAL_SYSCFG
+#endif //HAL_SYSCFG_H
