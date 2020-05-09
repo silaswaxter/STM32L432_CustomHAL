@@ -1,4 +1,4 @@
-#include "Custom_DMA.h"
+#include "DMA.h"
 
 static inline void enDMAClock(uint32_t DMA_Num)
 {

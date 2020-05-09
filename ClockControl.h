@@ -2,7 +2,7 @@
 #define CLOCK_CONTROL_H
 
 #include "stm32l432xx.h"
-#include "FlashFunctions.h"
+#include "FLASH.h"
 
 typedef enum {							//values mapped to MSIRANGE bit config
 	MSI_100 = (0x00),

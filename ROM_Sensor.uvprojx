@@ -393,16 +393,6 @@
           <GroupName>User Libraries</GroupName>
           <Files>
             <File>
-              <FileName>HAL_GPIO.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\HAL_GPIO.c</FilePath>
-            </File>
-            <File>
-              <FileName>HAL_GPIO.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\HAL_GPIO.h</FilePath>
-            </File>
-            <File>
               <FileName>HAL_SYSCFG.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\HAL_SYSCFG.c</FilePath>
@@ -411,26 +401,6 @@
               <FileName>HAL_SYSCFG.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\HAL_SYSCFG.h</FilePath>
-            </File>
-            <File>
-              <FileName>HAL_EXTI.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\HAL_EXTI.h</FilePath>
-            </File>
-            <File>
-              <FileName>RegisterMaskConstructors.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\RegisterMaskConstructors.h</FilePath>
-            </File>
-            <File>
-              <FileName>HAL_EXTI.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\HAL_EXTI.c</FilePath>
-            </File>
-            <File>
-              <FileName>RegisterMaskConstructors.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\RegisterMaskConstructors.c</FilePath>
             </File>
             <File>
               <FileName>ClockControl.c</FileName>
@@ -443,34 +413,54 @@
               <FilePath>.\ClockControl.h</FilePath>
             </File>
             <File>
-              <FileName>FlashFunctions.c</FileName>
+              <FileName>DMA.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FlashFunctions.c</FilePath>
+              <FilePath>.\DMA.c</FilePath>
             </File>
             <File>
-              <FileName>FlashFunctions.h</FileName>
+              <FileName>DMA.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FlashFunctions.h</FilePath>
+              <FilePath>.\DMA.h</FilePath>
             </File>
             <File>
-              <FileName>Custom_USART.c</FileName>
+              <FileName>EXTI.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Custom_USART.c</FilePath>
+              <FilePath>.\EXTI.c</FilePath>
             </File>
             <File>
-              <FileName>Custom_USART.h</FileName>
+              <FileName>EXTI.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\Custom_USART.h</FilePath>
+              <FilePath>.\EXTI.h</FilePath>
             </File>
             <File>
-              <FileName>Custom_DMA.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Custom_DMA.h</FilePath>
-            </File>
-            <File>
-              <FileName>Custom_DMA.c</FileName>
+              <FileName>FLASH.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Custom_DMA.c</FilePath>
+              <FilePath>.\FLASH.c</FilePath>
+            </File>
+            <File>
+              <FileName>FLASH.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FLASH.h</FilePath>
+            </File>
+            <File>
+              <FileName>GPIO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\GPIO.c</FilePath>
+            </File>
+            <File>
+              <FileName>GPIO.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\GPIO.h</FilePath>
+            </File>
+            <File>
+              <FileName>USART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USART.c</FilePath>
+            </File>
+            <File>
+              <FileName>USART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\USART.h</FilePath>
             </File>
           </Files>
         </Group>

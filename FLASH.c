@@ -1,4 +1,4 @@
-#include "FlashFunctions.h"
+#include "FLASH.h"
 #include <stdint.h>
 
 void setFlashLatency(int tgtSysClockSpeedMHz)

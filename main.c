@@ -2,19 +2,18 @@
 
 #include <string.h>
 
-#include "HAL_GPIO.h"
-#include "HAL_SYSCFG.h"
-#include "HAL_EXTI.h"
 #include "ClockControl.h"
-#include "Custom_USART.h"
-#include "Custom_DMA.h"
+#include "GPIO.h"
+#include "EXTI.h"
+//#include "USART.h"
+//#include "DMA.h"
 
 //Clock Structs
 SystemClock_T SYSCLK;
 PLL_T PLL_SYSCLK;
 
-//GPIO_Type led3;
-//EXTI_Type extiB1;
+GPIO_Type led3;
+EXTI_Type extiB1;
 //void LEDInteruptInit(void);
 void UART2Init(void);
 void SystemClockInit(void);
@@ -23,6 +22,7 @@ int main()
 {	
 	SystemClockInit();		//Set SYSCLK @ 80MHz
 	
+	/*
 	UART2Init();
 	
 	//TX Test Data
@@ -68,12 +68,36 @@ int main()
 	
 	startDMA(&dma_UART2_TX);
 	startDMA(&dma_UART2_RX);
+	*/
+	
+	
 	
 	while(1)
 	{ 
 		
 	}	
 }
+
+void SystemClockInit(void)
+{
+	PLL_T PLL_SYSCLK;
+	PLL_SYSCLK.PLLClockSource = ClockSource_HSE;
+	PLL_SYSCLK.PLLM = PLLM_1;
+	PLL_SYSCLK.PLLN = 20;
+	PLL_SYSCLK.PLLR = PLLR_2;
+	
+	SystemClock_T SYSCLK;
+	SYSCLK.AHBPrescaler = AHB_1;
+	SYSCLK.APB1Prescaler = APB_1;
+	SYSCLK.APB2Prescaler = APB_1;
+	SYSCLK.PLL_Configuration = &PLL_SYSCLK;
+	SYSCLK.SystemClockSource = ClockSource_PLL;
+	SYSCLK.TargetSystemClockSpeedMHZ = 8;
+	
+	setSystemClock(&SYSCLK);
+}
+
+
 
 /*
 void USART2_IRQHandler()
@@ -98,7 +122,7 @@ void USART2_IRQHandler()
 		
 	}
 }
-*/
+
 
 void UART2Init(void)
 {
@@ -131,68 +155,49 @@ void UART2Init(void)
 	USART_enInterupts(uart2.USART_Num);
 	//NVIC_EnableIRQ(USART2_IRQn);
 }
+*/
 
-void SystemClockInit(void)
-{
-	PLL_T PLL_SYSCLK;
-	PLL_SYSCLK.PLLClockSource = ClockSource_HSE;
-	PLL_SYSCLK.PLLM = PLLM_1;
-	PLL_SYSCLK.PLLN = 20;
-	PLL_SYSCLK.PLLR = PLLR_2;
-	
-	SystemClock_T SYSCLK;
-	SYSCLK.AHBPrescaler = AHB_1;
-	SYSCLK.APB1Prescaler = APB_1;
-	SYSCLK.APB2Prescaler = APB_1;
-	SYSCLK.PLL_Configuration = &PLL_SYSCLK;
-	SYSCLK.SystemClockSource = ClockSource_PLL;
-	SYSCLK.TargetSystemClockSpeedMHZ = 8;
-	
-	setSystemClock(&SYSCLK);
-}
 
 /*
 void EXTI1_IRQHandler()
 {
 	//Clear Pending Interupt
-	exti_clearPending(extiB1.line);
+	extiClearPending(extiB1.line);
 	
 	//Turn On LED
-	gpio_writePin(&led3, HIGH);
+	gpioWrite(&led3, HIGH);
 }
 
 void LEDInteruptInit(void)
 {
-	//Led GPIO-Pin Setup
+		//Led GPIO-Pin Setup
 	led3.port = GPIOB;
 	led3.pin = 3;
 	led3.mode = GPIO_MODE_OUTPUT;
-	led3.output_Type = GPIO_OUTPUT_TYPE_PUSH;
-	led3.output_Speed = GPIO_OUTPUT_SPEED_MEDIUM;
+	led3.outputType = GPIO_OUTPUT_TYPE_PUSH;
+	led3.outputSpeed = GPIO_OUTPUT_SPEED_MEDIUM;
 	led3.pull = GPIO_PULL_NONE;
 	
-	gpio_init(&led3);
+	gpioInit(&led3);
+
+	gpioWrite(&led3, LOW);
 	
 	//Interupt GPIO-Pin Setup
 	GPIO_Type interuptGPIO;
 	interuptGPIO.port = GPIOB;
 	interuptGPIO.pin = 1;
 	interuptGPIO.mode = GPIO_MODE_OUTPUT;
-	interuptGPIO.output_Type = GPIO_OUTPUT_TYPE_PUSH;
-	interuptGPIO.output_Speed = GPIO_OUTPUT_SPEED_MEDIUM;
+	interuptGPIO.outputType = GPIO_OUTPUT_TYPE_PUSH;
+	interuptGPIO.outputSpeed = GPIO_OUTPUT_SPEED_MEDIUM;
 	interuptGPIO.pull = GPIO_PULL_NONE;
 	
-	gpio_init(&interuptGPIO);
+	gpioInit(&interuptGPIO);
 
 	//EXTI External Interupt Setup
 	extiB1.line = 1;
 	extiB1.edgeTrigger = EXTI_EDGE_RISING;
 	extiB1.mode = EXTI_MODE_INTERUPT;
-
-	//Interupt Initialization
-	enEXTI_GPIO(interuptGPIO.port, interuptGPIO.pin);
 	
-	//EXTI Initialization
-	exti_init(&extiB1, EXTI1_IRQn);
+	extiInit(&interuptGPIO, &extiB1, EXTI1_IRQn);
 }
 */
