@@ -393,16 +393,6 @@
           <GroupName>User Libraries</GroupName>
           <Files>
             <File>
-              <FileName>HAL_SYSCFG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\HAL_SYSCFG.c</FilePath>
-            </File>
-            <File>
-              <FileName>HAL_SYSCFG.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\HAL_SYSCFG.h</FilePath>
-            </File>
-            <File>
               <FileName>ClockControl.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\ClockControl.c</FilePath>

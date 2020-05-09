@@ -5,8 +5,8 @@
 #include "ClockControl.h"
 #include "GPIO.h"
 #include "EXTI.h"
-//#include "USART.h"
-//#include "DMA.h"
+#include "USART.h"
+#include "DMA.h"
 
 //Clock Structs
 SystemClock_T SYSCLK;
@@ -22,7 +22,6 @@ int main()
 {	
 	SystemClockInit();		//Set SYSCLK @ 80MHz
 	
-	/*
 	UART2Init();
 	
 	//TX Test Data
@@ -30,8 +29,6 @@ int main()
 	char rxData;
 	
 	//Enable DMA
-		//DMA1_Channel6 = USART2_RX
-		//DMA1_Channel7 = USART2_TX
 	DMA_Channel_T dma_UART2_TX;
 	dma_UART2_TX.DMA_Num = 1;
 	dma_UART2_TX.DMA_ChannelNum = 7;
@@ -68,7 +65,6 @@ int main()
 	
 	startDMA(&dma_UART2_TX);
 	startDMA(&dma_UART2_RX);
-	*/
 	
 	
 	
@@ -99,7 +95,6 @@ void SystemClockInit(void)
 
 
 
-/*
 void USART2_IRQHandler()
 {
 	//Check IRQtrigger: RXE
@@ -131,31 +126,31 @@ void UART2Init(void)
 	gpio_UART1_TX.pin = 2;
 	gpio_UART1_TX.mode = GPIO_MODE_ALTFUNC;
 	gpio_UART1_TX.altFunctionNum = 7;													//AF7
-	gpio_UART1_TX.output_Type = GPIO_OUTPUT_TYPE_PUSH;
-	gpio_UART1_TX.output_Speed = GPIO_OUTPUT_SPEED_VERYHIGH;
+	gpio_UART1_TX.outputType = GPIO_OUTPUT_TYPE_PUSH;
+	gpio_UART1_TX.outputSpeed = GPIO_OUTPUT_SPEED_VERYHIGH;
 	
-	gpio_init(&gpio_UART1_TX);
+	gpioInit(&gpio_UART1_TX);
 	
 	GPIO_Type gpio_UART1_RX;
 	gpio_UART1_RX.port = GPIOA;
 	gpio_UART1_RX.pin = 3;
 	gpio_UART1_RX.mode = GPIO_MODE_ALTFUNC;
 	gpio_UART1_RX.altFunctionNum = 7;													//AF7
-	gpio_UART1_RX.output_Type = GPIO_OUTPUT_TYPE_PUSH;
-	gpio_UART1_RX.output_Speed = GPIO_OUTPUT_SPEED_VERYHIGH;
+	gpio_UART1_RX.outputType = GPIO_OUTPUT_TYPE_PUSH;
+	gpio_UART1_RX.outputSpeed = GPIO_OUTPUT_SPEED_VERYHIGH;
 	
-	gpio_init(&gpio_UART1_RX);
+	gpioInit(&gpio_UART1_RX);
 	
 	USART_T uart2;
 	uart2.baudRate = 9600;
-	uart2.USART_Num = 2;
+	uart2.usartNum = 2;
+	uart2.usartPeriph = USART2;
 	
-	usart_init(&uart2);	
+	usartInit(&uart2);	
 	
-	USART_enInterupts(uart2.USART_Num);
+	usartEnInterupts(uart2.usartPeriph);
 	//NVIC_EnableIRQ(USART2_IRQn);
 }
-*/
 
 
 /*
