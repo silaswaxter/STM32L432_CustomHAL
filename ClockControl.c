@@ -25,7 +25,7 @@ void setSystemClock(SystemClock_T* SystemClockConfig)
 	}
 	
 	//Enable Flash Prefetch
-	enFlashPrefetch;
+	enFlashPrefetch();
 	
 	//Set Flash Wait Cycles (Flash R/W is slower than MCU speed)
 	setFlashLatency(SystemClockConfig->TargetSystemClockSpeedMHZ);
@@ -130,7 +130,7 @@ void disClock(ClockSource_T clockSource)
 void setMSIRANGE(MSISpeed_T speed)
 {
 	//Set Flash Latency
-	enFlashPrefetch;
+	enFlashPrefetch();
 	if(speed == MSI_48000)
 		setFlashLatency(48);
 	

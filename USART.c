@@ -125,6 +125,16 @@ static void enUSART(USART_TypeDef* usartPeriph)
 	usartPeriph->CR1 |= USART_CR1_RE | USART_CR1_TE;
 }
 
+void usartEnDMA_TX(USART_T* USARTConfig)
+{
+	USARTConfig->usartPeriph->CR3 |= USART_CR3_DMAT;
+}
+
+void usartEnDMA_RX(USART_T* USARTConfig)
+{
+	USARTConfig->usartPeriph->CR3 |= USART_CR3_DMAR;
+}
+
 void usartEnInterupts(USART_TypeDef* usartPeriph)
 {
 	//Enable Interupts USART side
@@ -136,4 +146,10 @@ void usartInit(USART_T* USARTConfig)
 	enUSARTClock(USARTConfig->usartNum);
 	setBaudRate(USARTConfig);
 	enUSART(USARTConfig->usartPeriph);
+	
+	if(USARTConfig->dmaEnabled_Tx)
+		usartEnDMA_TX(USARTConfig);
+
+	if(USARTConfig->dmaEnabled_Rx)
+		usartEnDMA_RX(USARTConfig);
 }

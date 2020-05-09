@@ -12,59 +12,18 @@
 SystemClock_T SYSCLK;
 PLL_T PLL_SYSCLK;
 
+//GPIO-EXTI Structs
 GPIO_Type led3;
 EXTI_Type extiB1;
-//void LEDInteruptInit(void);
-void UART2Init(void);
+
+//Application Functions
+void LEDInteruptInit(void);
+void UART2_DMA_TestSetup(void);
 void SystemClockInit(void);
 
 int main()
 {	
 	SystemClockInit();		//Set SYSCLK @ 80MHz
-	
-	UART2Init();
-	
-	//TX Test Data
-	char txData[] = "1234567890";
-	char rxData;
-	
-	//Enable DMA
-	DMA_Channel_T dma_UART2_TX;
-	dma_UART2_TX.DMA_Num = 1;
-	dma_UART2_TX.DMA_ChannelNum = 7;
-	dma_UART2_TX.DMAx_Channeln_Access = DMA1_Channel7;
-	dma_UART2_TX.PeriphAddress = (uint32_t)&USART2->TDR;
-	dma_UART2_TX.MemAddress = (uint32_t)txData;
-	dma_UART2_TX.NumDataToTransfer = (strlen(txData));
-	dma_UART2_TX.selChannelPeriph_Bits = (0x02);
-	dma_UART2_TX.CircularMode = 0;
-	dma_UART2_TX.MemIncrement = 1;
-	dma_UART2_TX.PeriphIncrement = 0;
-	dma_UART2_TX.ReadFromMemory = 1;
-	
-	dma_init(&dma_UART2_TX);
-	
-	DMA_Channel_T dma_UART2_RX;
-	dma_UART2_RX.DMA_Num = 1;
-	dma_UART2_RX.DMA_ChannelNum = 6;
-	dma_UART2_RX.DMAx_Channeln_Access = DMA1_Channel6;
-	dma_UART2_RX.PeriphAddress = (uint32_t)&USART2->RDR;
-	dma_UART2_RX.MemAddress = (uint32_t)&rxData;
-	dma_UART2_RX.NumDataToTransfer = 1;
-	dma_UART2_RX.selChannelPeriph_Bits = (0x02);
-	dma_UART2_RX.CircularMode = 1;
-	dma_UART2_RX.MemIncrement = 0;
-	dma_UART2_RX.PeriphIncrement = 0;
-	dma_UART2_RX.ReadFromMemory = 0;
-	
-	dma_init(&dma_UART2_RX);
-	
-	//Enable USART2 DMA Tx/RX
-	USART2->CR3 |= USART_CR3_DMAT;	
-	USART2->CR3 |= USART_CR3_DMAR;
-	
-	startDMA(&dma_UART2_TX);
-	startDMA(&dma_UART2_RX);
 	
 	
 	
@@ -93,8 +52,7 @@ void SystemClockInit(void)
 	setSystemClock(&SYSCLK);
 }
 
-
-
+/*
 void USART2_IRQHandler()
 {
 	//Check IRQtrigger: RXE
@@ -117,39 +75,79 @@ void USART2_IRQHandler()
 		
 	}
 }
-
+*/
 
 void UART2Init(void)
 {
-	GPIO_Type gpio_UART1_TX;
-	gpio_UART1_TX.port = GPIOA;
-	gpio_UART1_TX.pin = 2;
-	gpio_UART1_TX.mode = GPIO_MODE_ALTFUNC;
-	gpio_UART1_TX.altFunctionNum = 7;													//AF7
-	gpio_UART1_TX.outputType = GPIO_OUTPUT_TYPE_PUSH;
-	gpio_UART1_TX.outputSpeed = GPIO_OUTPUT_SPEED_VERYHIGH;
+	GPIO_Type gpio_UART2_TX;
+	gpio_UART2_TX.port = GPIOA;
+	gpio_UART2_TX.pin = 2;
+	gpio_UART2_TX.mode = GPIO_MODE_ALTFUNC;
+	gpio_UART2_TX.altFunctionNum = 7;													//AF7
+	gpio_UART2_TX.outputType = GPIO_OUTPUT_TYPE_PUSH;
+	gpio_UART2_TX.outputSpeed = GPIO_OUTPUT_SPEED_VERYHIGH;
 	
-	gpioInit(&gpio_UART1_TX);
+	gpioInit(&gpio_UART2_TX);
 	
-	GPIO_Type gpio_UART1_RX;
-	gpio_UART1_RX.port = GPIOA;
-	gpio_UART1_RX.pin = 3;
-	gpio_UART1_RX.mode = GPIO_MODE_ALTFUNC;
-	gpio_UART1_RX.altFunctionNum = 7;													//AF7
-	gpio_UART1_RX.outputType = GPIO_OUTPUT_TYPE_PUSH;
-	gpio_UART1_RX.outputSpeed = GPIO_OUTPUT_SPEED_VERYHIGH;
+	GPIO_Type gpio_UART2_RX;
+	gpio_UART2_RX.port = GPIOA;
+	gpio_UART2_RX.pin = 3;
+	gpio_UART2_RX.mode = GPIO_MODE_ALTFUNC;
+	gpio_UART2_RX.altFunctionNum = 7;													//AF7
+	gpio_UART2_RX.outputType = GPIO_OUTPUT_TYPE_PUSH;
+	gpio_UART2_RX.outputSpeed = GPIO_OUTPUT_SPEED_VERYHIGH;
 	
-	gpioInit(&gpio_UART1_RX);
+	gpioInit(&gpio_UART2_RX);
 	
 	USART_T uart2;
+	uart2.usartPeriph = USART2;
 	uart2.baudRate = 9600;
 	uart2.usartNum = 2;
-	uart2.usartPeriph = USART2;
+	uart2.dmaEnabled_Rx = 1;
+	uart2.dmaEnabled_Tx = 1;
 	
 	usartInit(&uart2);	
 	
-	usartEnInterupts(uart2.usartPeriph);
+	//usartEnInterupts(uart2.usartPeriph);
 	//NVIC_EnableIRQ(USART2_IRQn);
+	
+	//TX Test Data
+	char txData[] = "1234567890";
+	char rxData;
+	
+	//Enable DMA
+	DMA_Channel_T dma_UART2_TX;
+	dma_UART2_TX.dmaNum = 1;
+	dma_UART2_TX.dmaChannelNum = 7;
+	dma_UART2_TX.dmaPeriph = DMA1_Channel7;
+	dma_UART2_TX.PeriphAddress = (uint32_t)&USART2->TDR;
+	dma_UART2_TX.MemAddress = (uint32_t)txData;
+	dma_UART2_TX.NumDataToTransfer = (strlen(txData));
+	dma_UART2_TX.selChannelPeriph_Bits = (0x02);
+	dma_UART2_TX.CircularMode = 0;
+	dma_UART2_TX.MemIncrement = 1;
+	dma_UART2_TX.PeriphIncrement = 0;
+	dma_UART2_TX.ReadFromMemory = 1;
+	
+	dmaConfig(&dma_UART2_TX);
+	
+	DMA_Channel_T dma_UART2_RX;
+	dma_UART2_RX.dmaNum = 1;
+	dma_UART2_RX.dmaChannelNum = 6;
+	dma_UART2_RX.dmaPeriph = DMA1_Channel6;
+	dma_UART2_RX.PeriphAddress = (uint32_t)&USART2->RDR;
+	dma_UART2_RX.MemAddress = (uint32_t)&rxData;
+	dma_UART2_RX.NumDataToTransfer = 1;
+	dma_UART2_RX.selChannelPeriph_Bits = (0x02);
+	dma_UART2_RX.CircularMode = 1;
+	dma_UART2_RX.MemIncrement = 0;
+	dma_UART2_RX.PeriphIncrement = 0;
+	dma_UART2_RX.ReadFromMemory = 0;
+	
+	dmaConfig(&dma_UART2_RX);
+	
+	dmaEnable(&dma_UART2_TX);
+	dmaEnable(&dma_UART2_RX);
 }
 
 
@@ -162,6 +160,7 @@ void EXTI1_IRQHandler()
 	//Turn On LED
 	gpioWrite(&led3, HIGH);
 }
+*/
 
 void LEDInteruptInit(void)
 {
@@ -195,4 +194,3 @@ void LEDInteruptInit(void)
 	
 	extiInit(&interuptGPIO, &extiB1, EXTI1_IRQn);
 }
-*/

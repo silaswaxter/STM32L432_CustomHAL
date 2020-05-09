@@ -1,5 +1,5 @@
-#ifndef CUSTOM_DMA_H
-#define CUSTOM_DMA_H
+#ifndef DMA_H
+#define DMA_H
 
 #include "stm32l432xx.h"
 
@@ -12,9 +12,9 @@ typedef enum {
 
 typedef struct {
 	//DMA Selection
-	uint32_t DMA_Num;																//used in DMA clock enable
-	uint32_t DMA_ChannelNum;
-	DMA_Channel_TypeDef* DMAx_Channeln_Access;			//DMAx_Channeln
+	uint32_t dmaNum;									//for DMA clock enable
+	uint32_t dmaChannelNum;
+	DMA_Channel_TypeDef* dmaPeriph;		//DMAx_Channeln
 	//DMA Settings
 	uint32_t MemAddress;
 	uint32_t PeriphAddress;
@@ -33,8 +33,8 @@ typedef struct {
 static inline void enDMAClock(uint32_t DMA_Num);
 static void selChannelPeriph(DMA_Channel_T* DMAConfig);		//selects peripheral for channel	(e.g. usart2_rx or usart1_rx)
 
-void dma_init(DMA_Channel_T* DMAConfig);
-void startDMA(DMA_Channel_T* DMAConfig);
-void stopDMA(DMA_Channel_T* DMAConfig);
+void dmaConfig(DMA_Channel_T* DMAConfig);					//Config instead of Init because it doesn't enable periph 
+void dmaEnable(DMA_Channel_T* DMAConfig);
+void dmaDisable(DMA_Channel_T* DMAConfig);
 
-#endif //CUSTOM_DMA_H
+#endif //DMA_H

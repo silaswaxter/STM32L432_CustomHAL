@@ -7,54 +7,53 @@ static inline void enDMAClock(uint32_t DMA_Num)
 
 static void selChannelPeriph(DMA_Channel_T* DMAConfig)
 {
-	if(DMAConfig->DMA_Num == 1)
+	if(DMAConfig->dmaNum == 1)
 	{
-		DMA1_CSELR->CSELR |= (DMAConfig->selChannelPeriph_Bits<<(4*(DMAConfig->DMA_ChannelNum - 1)));
+		DMA1_CSELR->CSELR |= (DMAConfig->selChannelPeriph_Bits<<(4*(DMAConfig->dmaChannelNum - 1)));
 	}
-	if(DMAConfig->DMA_Num == 2)
+	if(DMAConfig->dmaNum == 2)
 	{
-		DMA2_CSELR->CSELR |= (DMAConfig->selChannelPeriph_Bits<<(4*(DMAConfig->DMA_ChannelNum - 1)));
+		DMA2_CSELR->CSELR |= (DMAConfig->selChannelPeriph_Bits<<(4*(DMAConfig->dmaChannelNum - 1)));
 	}
 }
 
 
-void dma_init(DMA_Channel_T* DMAConfig)
+void dmaConfig(DMA_Channel_T* DMAConfig)
 {
-	enDMAClock(DMAConfig->DMA_Num);
+	enDMAClock(DMAConfig->dmaNum);
 	
 	//Set DMA Peripheral Address
-	DMAConfig->DMAx_Channeln_Access->CPAR = DMAConfig->PeriphAddress;
+	DMAConfig->dmaPeriph->CPAR = DMAConfig->PeriphAddress;
 	
 	//Set DMA Memory Address
-	DMAConfig->DMAx_Channeln_Access->CMAR = DMAConfig->MemAddress;
+	DMAConfig->dmaPeriph->CMAR = DMAConfig->MemAddress;
 	
 	//Set DMA Number of Data to Transfer
-	DMAConfig->DMAx_Channeln_Access->CNDTR = DMAConfig->NumDataToTransfer;
+	DMAConfig->dmaPeriph->CNDTR = DMAConfig->NumDataToTransfer;
 	
 	//Set DMA Channel Event Source
 	selChannelPeriph(DMAConfig);
 	
 	//Set DMA Boolean Settings
-	if(DMAConfig->CircularMode == 1)
-		DMAConfig->DMAx_Channeln_Access->CCR |= DMA_CCR_CIRC;
+	if(DMAConfig->CircularMode)
+		DMAConfig->dmaPeriph->CCR |= DMA_CCR_CIRC;
 	
-	if(DMAConfig->MemIncrement == 1)
-		DMAConfig->DMAx_Channeln_Access->CCR |= DMA_CCR_MINC;
+	if(DMAConfig->MemIncrement)
+		DMAConfig->dmaPeriph->CCR |= DMA_CCR_MINC;
 	
-	if(DMAConfig->PeriphIncrement == 1)
-		DMAConfig->DMAx_Channeln_Access->CCR |= DMA_CCR_PINC;
+	if(DMAConfig->PeriphIncrement)
+		DMAConfig->dmaPeriph->CCR |= DMA_CCR_PINC;
 
-	if(DMAConfig->ReadFromMemory == 1)
-		DMAConfig->DMAx_Channeln_Access->CCR |= DMA_CCR_DIR;
+	if(DMAConfig->ReadFromMemory)
+		DMAConfig->dmaPeriph->CCR |= DMA_CCR_DIR;
 }
 
-void startDMA(DMA_Channel_T* DMAConfig)
+void dmaEnable(DMA_Channel_T* DMAConfig)
 {
-	DMAConfig->DMAx_Channeln_Access->CCR |= DMA_CCR_EN;
+	DMAConfig->dmaPeriph->CCR |= DMA_CCR_EN;
 }
 
-
-void stopDMA(DMA_Channel_T* DMAConfig)
+void dmaDisable(DMA_Channel_T* DMAConfig)
 {
-	DMAConfig->DMAx_Channeln_Access->CCR &= ~DMA_CCR_EN;
+	DMAConfig->dmaPeriph->CCR &= ~DMA_CCR_EN;
 }
