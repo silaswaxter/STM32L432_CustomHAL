@@ -33,8 +33,8 @@ typedef struct {
 static inline void enDMAClock(uint32_t DMA_Num);
 static void selChannelPeriph(DMA_Channel_T* DMAConfig);		//selects peripheral for channel	(e.g. usart2_rx or usart1_rx)
 
-void dma_init(DMA_Channel_T* DMAConfig);
-void startDMA(DMA_Channel_T* DMAConfig);
-void stopDMA(DMA_Channel_T* DMAConfig);
+void configDMA(DMA_Channel_T* DMAConfig);									//sets DMA settings (enDMA must be called to start)
+void enDMA(DMA_Channel_T* DMAConfig);
+void disDMA(DMA_Channel_T* DMAConfig);
 
 #endif //CUSTOM_DMA_H

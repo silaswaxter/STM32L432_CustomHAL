@@ -18,7 +18,7 @@ static void selChannelPeriph(DMA_Channel_T* DMAConfig)
 }
 
 
-void dma_init(DMA_Channel_T* DMAConfig)
+void configDMA(DMA_Channel_T* DMAConfig)
 {
 	enDMAClock(DMAConfig->DMA_Num);
 	
@@ -48,13 +48,13 @@ void dma_init(DMA_Channel_T* DMAConfig)
 		DMAConfig->DMAx_Channeln_Access->CCR |= DMA_CCR_DIR;
 }
 
-void startDMA(DMA_Channel_T* DMAConfig)
+void enDMA(DMA_Channel_T* DMAConfig)
 {
 	DMAConfig->DMAx_Channeln_Access->CCR |= DMA_CCR_EN;
 }
 
 
-void stopDMA(DMA_Channel_T* DMAConfig)
+void disDMA(DMA_Channel_T* DMAConfig)
 {
 	DMAConfig->DMAx_Channeln_Access->CCR &= ~DMA_CCR_EN;
 }

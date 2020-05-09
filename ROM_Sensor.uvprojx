@@ -472,6 +472,16 @@
               <FileType>1</FileType>
               <FilePath>.\Custom_DMA.c</FilePath>
             </File>
+            <File>
+              <FileName>Custom_I2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Custom_I2C.c</FilePath>
+            </File>
+            <File>
+              <FileName>Custom_I2C.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Custom_I2C.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

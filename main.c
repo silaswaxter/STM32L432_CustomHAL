@@ -8,31 +8,171 @@
 #include "ClockControl.h"
 #include "Custom_USART.h"
 #include "Custom_DMA.h"
+#include "Custom_I2C.h"
+
+#define EM7180_Address 0x28
+#define EM7180_ROMVersion 0x70 	//2 bytes long
+
 
 //Clock Structs
 SystemClock_T SYSCLK;
 PLL_T PLL_SYSCLK;
+
+//DMA Structs
+DMA_Channel_T dma_UART2_TX;
+DMA_Channel_T dma_UART2_RX;
+
+DMA_Channel_T dma_I2C1_TX;
+DMA_Channel_T dma_I2C1_RX;
 
 //GPIO_Type led3;
 //EXTI_Type extiB1;
 //void LEDInteruptInit(void);
 void UART2Init(void);
 void SystemClockInit(void);
+void USART_DMASetup(void);
+
+void I2C_ReadBytes(uint8_t SlaveAddress, uint8_t subAddress, uint8_t byteCount);
 
 int main()
 {	
 	SystemClockInit();		//Set SYSCLK @ 80MHz
 	
+	/*
 	UART2Init();
+
+	DMASetup();
+	//Enable USART2 DMA Tx/RX
+	USART2->CR3 |= USART_CR3_DMAT;	
+	USART2->CR3 |= USART_CR3_DMAR;
+	startDMA(&dma_UART2_TX);
+	startDMA(&dma_UART2_RX);
 	
-	//TX Test Data
+	*/	
+	
+	//Enable I2C
+	RCC->APB1ENR1 |= RCC_APB1ENR1_I2C1EN;
+	
+	
+	//Config GPIO
+	GPIO_Type gpio_I2C1_SDA;
+	gpio_I2C1_SDA.port = GPIOB;
+	gpio_I2C1_SDA.pin = 7;
+	gpio_I2C1_SDA.mode = GPIO_MODE_ALTFUNC;
+	gpio_I2C1_SDA.altFunctionNum = 4;
+	gpio_I2C1_SDA.output_Type = GPIO_OUTPUT_TYPE_DRAIN;
+	gpio_I2C1_SDA.output_Speed = GPIO_OUTPUT_SPEED_VERYHIGH;
+	gpio_I2C1_SDA.pull = GPIO_PULL_UP;
+	
+	gpio_init(&gpio_I2C1_SDA);
+	
+	GPIO_Type gpio_I2C1_SCL;
+	gpio_I2C1_SCL.port = GPIOB;
+	gpio_I2C1_SCL.pin = 6;
+	gpio_I2C1_SCL.mode = GPIO_MODE_ALTFUNC;
+	gpio_I2C1_SCL.altFunctionNum = 4;
+	gpio_I2C1_SCL.output_Type = GPIO_OUTPUT_TYPE_DRAIN;
+	gpio_I2C1_SCL.output_Speed = GPIO_OUTPUT_SPEED_VERYHIGH;
+	gpio_I2C1_SCL.pull = GPIO_PULL_UP;
+	
+	gpio_init(&gpio_I2C1_SCL);
+	
+	//Set I2C Speed
+	I2C1->TIMINGR = I2C_TIMINGR_100khz;
+	
+	//Enable DMA Requests
+	I2C1->CR1 |= I2C_CR1_RXDMAEN | I2C_CR1_TXDMAEN;
+	
+	//Enable I2C Peripheral
+	I2C1->CR1 |= I2C_CR1_PE;
+	
+	//Setup DMA
+	//char i2c_TestData_TX[] = "1234567890";
+	char i2c_TestData_RX[16];
+	
+	/*
+	DMA_Channel_T dma_I2C1_TX;
+	dma_I2C1_TX.DMA_Num = 2;
+	dma_I2C1_TX.DMA_ChannelNum = 7;
+	dma_I2C1_TX.DMAx_Channeln_Access = DMA2_Channel7;
+	dma_I2C1_TX.PeriphAddress = (uint32_t)&I2C1->TXDR;
+	dma_I2C1_TX.MemAddress = (uint32_t)i2c_TestData_TX;
+	dma_I2C1_TX.NumDataToTransfer = (strlen(i2c_TestData_TX));
+	dma_I2C1_TX.selChannelPeriph_Bits = (0x05);
+	dma_I2C1_TX.CircularMode = 0;
+	dma_I2C1_TX.MemIncrement = 1;
+	dma_I2C1_TX.PeriphIncrement = 0;
+	dma_I2C1_TX.ReadFromMemory = 1;
+	
+	dma_init(&dma_I2C1_TX);
+	*/
+	
+	dma_I2C1_RX.DMA_Num = 2;
+	dma_I2C1_RX.DMA_ChannelNum = 6;
+	dma_I2C1_RX.DMAx_Channeln_Access = DMA2_Channel6;
+	dma_I2C1_RX.PeriphAddress = (uint32_t)&I2C1->RXDR;
+	dma_I2C1_RX.MemAddress = (uint32_t)&i2c_TestData_RX;
+	dma_I2C1_RX.NumDataToTransfer = 1;
+	dma_I2C1_RX.selChannelPeriph_Bits = (0x05);
+	dma_I2C1_RX.CircularMode = 1;
+	dma_I2C1_RX.MemIncrement = 0;
+	dma_I2C1_RX.PeriphIncrement = 0;
+	dma_I2C1_RX.ReadFromMemory = 0;
+	
+	configDMA(&dma_I2C1_RX);
+	
+	I2C_ReadBytes(EM7180_Address, EM7180_ROMVersion, 2);
+	
+	while(1)
+	{ 
+		
+	}	
+}
+
+void I2C_ReadBytes(uint8_t SlaveAddress, uint8_t subAddress, uint8_t byteCount)
+{
+	//Set Slave Address
+	I2C1->CR2 &= ~(0b1111111<<1);				//clear SlaveAddress bits
+	I2C1->CR2 |= (SlaveAddress<<1);
+	
+	//send start condition
+	I2C1->CR2 |= I2C_CR2_START;
+	
+	//set Number of Bytes
+	I2C1->CR2 &= ~(I2C_CR2_NBYTES_Msk);		//clear NBYTES bits
+	I2C1->CR2 |= (1<<16);
+	
+	//set Transfer Direction
+	I2C1->CR2 &= ~(I2C_CR2_RD_WRN);				//Request Write
+	
+	//write SubAddress
+	I2C1->TXDR = subAddress;
+	
+	
+	//set Number of Bytes
+	I2C1->CR2 &= ~(I2C_CR2_NBYTES_Msk);		//clear NBYTES bits
+	I2C1->CR2 |= (byteCount<<16);
+	
+	//set Transfer Direction
+	I2C1->CR2 |= (I2C_CR2_RD_WRN);				//Request Read	
+	
+	//enable DMA
+	enDMA(&dma_I2C1_RX);
+	
+	//wait for DMA_RX_TC Flag
+	while(DMA2->ISR & (1<<21))
+	{
+	}
+}
+
+
+void USART_DMASetup(void)
+{
+	//Test Data
 	char txData[] = "1234567890";
 	char rxData;
 	
-	//Enable DMA
-		//DMA1_Channel6 = USART2_RX
-		//DMA1_Channel7 = USART2_TX
-	DMA_Channel_T dma_UART2_TX;
+	//DMA_Channel_T dma_UART2_TX;
 	dma_UART2_TX.DMA_Num = 1;
 	dma_UART2_TX.DMA_ChannelNum = 7;
 	dma_UART2_TX.DMAx_Channeln_Access = DMA1_Channel7;
@@ -45,9 +185,9 @@ int main()
 	dma_UART2_TX.PeriphIncrement = 0;
 	dma_UART2_TX.ReadFromMemory = 1;
 	
-	dma_init(&dma_UART2_TX);
+	configDMA(&dma_UART2_TX);
 	
-	DMA_Channel_T dma_UART2_RX;
+	//DMA_Channel_T dma_UART2_RX;
 	dma_UART2_RX.DMA_Num = 1;
 	dma_UART2_RX.DMA_ChannelNum = 6;
 	dma_UART2_RX.DMAx_Channeln_Access = DMA1_Channel6;
@@ -60,20 +200,9 @@ int main()
 	dma_UART2_RX.PeriphIncrement = 0;
 	dma_UART2_RX.ReadFromMemory = 0;
 	
-	dma_init(&dma_UART2_RX);
-	
-	//Enable USART2 DMA Tx/RX
-	USART2->CR3 |= USART_CR3_DMAT;	
-	USART2->CR3 |= USART_CR3_DMAR;
-	
-	startDMA(&dma_UART2_TX);
-	startDMA(&dma_UART2_RX);
-	
-	while(1)
-	{ 
-		
-	}	
+	configDMA(&dma_UART2_RX);
 }
+
 
 /*
 void USART2_IRQHandler()
