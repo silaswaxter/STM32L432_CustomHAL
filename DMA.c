@@ -23,28 +23,28 @@ void dmaConfig(DMA_T* DMAConfig)
 	enDMAClock(DMAConfig->dmaNum);
 	
 	//Set DMA Peripheral Address
-	DMAConfig->dmaPeriph->CPAR = DMAConfig->PeriphAddress;
+	DMAConfig->dmaPeriph->CPAR = DMAConfig->periphAddress;
 	
 	//Set DMA Memory Address
-	DMAConfig->dmaPeriph->CMAR = DMAConfig->MemAddress;
+	DMAConfig->dmaPeriph->CMAR = DMAConfig->memAddress;
 	
 	//Set DMA Number of Data to Transfer
-	DMAConfig->dmaPeriph->CNDTR = DMAConfig->NumDataToTransfer;
+	DMAConfig->dmaPeriph->CNDTR = DMAConfig->numTransfersPerRequest;
 	
 	//Set DMA Channel Event Source
 	selChannelPeriph(DMAConfig);
 	
 	//Set DMA Boolean Settings
-	if(DMAConfig->CircularMode)
+	if(DMAConfig->circMode)
 		DMAConfig->dmaPeriph->CCR |= DMA_CCR_CIRC;
 	
-	if(DMAConfig->MemIncrement)
+	if(DMAConfig->memIncr)
 		DMAConfig->dmaPeriph->CCR |= DMA_CCR_MINC;
 	
-	if(DMAConfig->PeriphIncrement)
+	if(DMAConfig->periphIncr)
 		DMAConfig->dmaPeriph->CCR |= DMA_CCR_PINC;
 
-	if(DMAConfig->ReadFromMemory)
+	if(DMAConfig->readFromMem)
 		DMAConfig->dmaPeriph->CCR |= DMA_CCR_DIR;
 }
 
@@ -57,3 +57,8 @@ void dmaDisable(DMA_T* DMAConfig)
 {
 	DMAConfig->dmaPeriph->CCR &= ~DMA_CCR_EN;
 }
+
+void dmaSetTransfersPerRequest(DMA_T* DMAConfig)
+{
+	DMAConfig->dmaPeriph->CNDTR = DMAConfig->numTransfersPerRequest;
+}	

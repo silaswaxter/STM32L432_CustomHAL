@@ -80,17 +80,17 @@ int main()
 	dma_I2C1_RX.dmaNum = 2;
 	dma_I2C1_RX.dmaChannelNum = 6;
 	dma_I2C1_RX.dmaPeriph = DMA2_Channel6;
-	dma_I2C1_RX.PeriphAddress = (uint32_t)&I2C1->RXDR;
-	dma_I2C1_RX.MemAddress = (uint32_t)&i2c_TestData_RX;
-	dma_I2C1_RX.PeriphDataSize_Bits = (0x00);
-	dma_I2C1_RX.MemDataSize_Bits = (0x00);
-	dma_I2C1_RX.NumDataToTransfer = 2;
+	dma_I2C1_RX.periphAddress = (uint32_t)&I2C1->RXDR;
+	dma_I2C1_RX.memAddress = (uint32_t)&i2c_TestData_RX;
+	dma_I2C1_RX.periphDataSize_Bits = (0x00);
+	dma_I2C1_RX.memDataSize_Bits = (0x00);
+	dma_I2C1_RX.numTransfersPerRequest = 2;
 	dma_I2C1_RX.selChannelPeriph_Bits = (0x05);
-	dma_I2C1_RX.Priority = DMAPriority_Medium;
-	dma_I2C1_RX.CircularMode = 1;
-	dma_I2C1_RX.MemIncrement = 1;
-	dma_I2C1_RX.PeriphIncrement = 0;
-	dma_I2C1_RX.ReadFromMemory = 0;
+	dma_I2C1_RX.priority = DMAPriority_Medium;
+	dma_I2C1_RX.circMode = 1;
+	dma_I2C1_RX.memIncr = 1;
+	dma_I2C1_RX.periphIncr = 0;
+	dma_I2C1_RX.readFromMem = 0;
 	
 	dmaConfig(&dma_I2C1_RX);
 	dmaEnable(&dma_I2C1_RX);
@@ -209,14 +209,14 @@ void UART2_DMA_TestSetup(void)
 	dma_UART2_TX.dmaNum = 1;
 	dma_UART2_TX.dmaChannelNum = 7;
 	dma_UART2_TX.dmaPeriph = DMA1_Channel7;
-	dma_UART2_TX.PeriphAddress = (uint32_t)&USART2->TDR;
-	dma_UART2_TX.MemAddress = (uint32_t)txData;
-	dma_UART2_TX.NumDataToTransfer = (strlen(txData));
+	dma_UART2_TX.periphAddress = (uint32_t)&USART2->TDR;
+	dma_UART2_TX.memAddress = (uint32_t)txData;
+	dma_UART2_TX.numTransfersPerRequest = (strlen(txData));
 	dma_UART2_TX.selChannelPeriph_Bits = (0x02);
-	dma_UART2_TX.CircularMode = 0;
-	dma_UART2_TX.MemIncrement = 1;
-	dma_UART2_TX.PeriphIncrement = 0;
-	dma_UART2_TX.ReadFromMemory = 1;
+	dma_UART2_TX.circMode = 0;
+	dma_UART2_TX.memIncr = 1;
+	dma_UART2_TX.periphIncr = 0;
+	dma_UART2_TX.readFromMem = 1;
 	
 	dmaConfig(&dma_UART2_TX);
 	
@@ -224,14 +224,14 @@ void UART2_DMA_TestSetup(void)
 	dma_UART2_RX.dmaNum = 1;
 	dma_UART2_RX.dmaChannelNum = 6;
 	dma_UART2_RX.dmaPeriph = DMA1_Channel6;
-	dma_UART2_RX.PeriphAddress = (uint32_t)&USART2->RDR;
-	dma_UART2_RX.MemAddress = (uint32_t)&rxData;
-	dma_UART2_RX.NumDataToTransfer = 1;
+	dma_UART2_RX.periphAddress = (uint32_t)&USART2->RDR;
+	dma_UART2_RX.memAddress = (uint32_t)&rxData;
+	dma_UART2_RX.numTransfersPerRequest = 1;
 	dma_UART2_RX.selChannelPeriph_Bits = (0x02);
-	dma_UART2_RX.CircularMode = 1;
-	dma_UART2_RX.MemIncrement = 0;
-	dma_UART2_RX.PeriphIncrement = 0;
-	dma_UART2_RX.ReadFromMemory = 0;
+	dma_UART2_RX.circMode = 1;
+	dma_UART2_RX.memIncr = 0;
+	dma_UART2_RX.periphIncr = 0;
+	dma_UART2_RX.readFromMem = 0;
 	
 	dmaConfig(&dma_UART2_RX);
 	
@@ -253,7 +253,7 @@ void EXTI1_IRQHandler()
 
 void LEDInteruptInit(void)
 {
-		//Led GPIO-Pin Setup
+	//Led GPIO-Pin Setup
 	led3.port = GPIOB;
 	led3.pin = 3;
 	led3.mode = GPIO_MODE_OUTPUT;

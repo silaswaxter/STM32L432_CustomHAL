@@ -16,25 +16,26 @@ typedef struct {
 	uint32_t dmaChannelNum;
 	DMA_Channel_TypeDef* dmaPeriph;		//DMAx_Channeln
 	//DMA Settings
-	uint32_t MemAddress;
-	uint32_t PeriphAddress;
-	uint32_t MemDataSize_Bits;
-	uint32_t PeriphDataSize_Bits;
-	uint32_t NumDataToTransfer; 			//Number of Data-Transfers in one cycle
+	uint32_t memAddress;
+	uint32_t periphAddress;
+	uint32_t memDataSize_Bits;
+	uint32_t periphDataSize_Bits;
+	uint16_t numTransfersPerRequest; 	//Transfers per request [CNDTR: ChannelNumberDataToTransferRegister]
 	uint32_t selChannelPeriph_Bits; 	//bits for mapping peripheral to channel
-	DMAPriority_T Priority;	
+	DMAPriority_T priority;	
 	//Boolean Settings
-	uint32_t CircularMode;
-	uint32_t MemIncrement; 						//after x[0] is wrote, write to x[1]?
-	uint32_t PeriphIncrement;
-	uint32_t ReadFromMemory;					//When 1, dma: mem->periph (even when MEM2MEM or PER2PER is enabled [these are naming conventions for addresses])
+	uint32_t circMode;
+	uint32_t memIncr; 								//after x[0] is wrote, write to x[1]?
+	uint32_t periphIncr;
+	uint32_t readFromMem;							//When 1, dma: mem->periph (even when MEM2MEM or PER2PER is enabled [these are naming conventions for addresses])
 } DMA_T;
 
 static inline void enDMAClock(uint32_t DMA_Num);
 static void selChannelPeriph(DMA_T* DMAConfig);		//selects peripheral for channel	(e.g. usart2_rx or usart1_rx)
 
-void dmaConfig(DMA_T* DMAConfig);					//Config instead of Init because it doesn't enable periph 
+void dmaConfig(DMA_T* DMAConfig);						//Config instead of Init because it doesn't enable periph 
 void dmaEnable(DMA_T* DMAConfig);
 void dmaDisable(DMA_T* DMAConfig);
+void dmaSetTransfersPerRequest(DMA_T* DMAConfig);		//INVALID if dmaEnabled
 
 #endif //DMA_H
