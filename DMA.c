@@ -5,7 +5,7 @@ static inline void enDMAClock(uint32_t DMA_Num)
 	(DMA_Num == 1) ? (RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN) : (RCC->AHB1ENR |= RCC_AHB1ENR_DMA2EN);
 }
 
-static void selChannelPeriph(DMA_Channel_T* DMAConfig)
+static void selChannelPeriph(DMA_T* DMAConfig)
 {
 	if(DMAConfig->dmaNum == 1)
 	{
@@ -18,7 +18,7 @@ static void selChannelPeriph(DMA_Channel_T* DMAConfig)
 }
 
 
-void dmaConfig(DMA_Channel_T* DMAConfig)
+void dmaConfig(DMA_T* DMAConfig)
 {
 	enDMAClock(DMAConfig->dmaNum);
 	
@@ -48,12 +48,12 @@ void dmaConfig(DMA_Channel_T* DMAConfig)
 		DMAConfig->dmaPeriph->CCR |= DMA_CCR_DIR;
 }
 
-void dmaEnable(DMA_Channel_T* DMAConfig)
+void dmaEnable(DMA_T* DMAConfig)
 {
 	DMAConfig->dmaPeriph->CCR |= DMA_CCR_EN;
 }
 
-void dmaDisable(DMA_Channel_T* DMAConfig)
+void dmaDisable(DMA_T* DMAConfig)
 {
 	DMAConfig->dmaPeriph->CCR &= ~DMA_CCR_EN;
 }

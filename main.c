@@ -21,15 +21,16 @@ GPIO_Type led3;
 EXTI_Type extiB1;
 
 //I2C-DMA Structs
-DMA_Channel_T dma_I2C1_TX;
-DMA_Channel_T dma_I2C1_RX;
+DMA_T dma_I2C1_TX;
+DMA_T dma_I2C1_RX;
+char i2c_TestData_RX[16];
 
 //Application Functions
 void UART2_DMA_TestSetup(void);
 void LEDInteruptInit(void);
 void SystemClockInit(void);
 
-void I2C_ReadBytes(uint8_t SlaveAddress, uint8_t subAddress, uint8_t byteCount);
+void EM7180_I2C_ReadBytes(uint8_t slaveAddr, uint8_t regAddr, uint8_t byteReadNum);
 
 int main()
 {	
@@ -69,44 +70,32 @@ int main()
 	//Enable DMA Requests
 	I2C1->CR1 |= I2C_CR1_RXDMAEN | I2C_CR1_TXDMAEN;
 	
+	//Enable AUTOEND (sends stop-condition after NBYTES)
+	I2C1->CR2 |= I2C_CR2_AUTOEND;
+	
 	//Enable I2C Peripheral
 	I2C1->CR1 |= I2C_CR1_PE;
 	
 	//Setup DMA
-	//char i2c_TestData_TX[] = "1234567890";
-	char i2c_TestData_RX[16];
-	
-	/*
-	dma_I2C1_TX.DMA_Num = 2;
-	dma_I2C1_TX.DMA_ChannelNum = 7;
-	dma_I2C1_TX.DMAx_Channeln_Access = DMA2_Channel7;
-	dma_I2C1_TX.PeriphAddress = (uint32_t)&I2C1->TXDR;
-	dma_I2C1_TX.MemAddress = (uint32_t)i2c_TestData_TX;
-	dma_I2C1_TX.NumDataToTransfer = (strlen(i2c_TestData_TX));
-	dma_I2C1_TX.selChannelPeriph_Bits = (0x05);
-	dma_I2C1_TX.CircularMode = 0;
-	dma_I2C1_TX.MemIncrement = 1;
-	dma_I2C1_TX.PeriphIncrement = 0;
-	dma_I2C1_TX.ReadFromMemory = 1;
-	
-	dma_init(&dma_I2C1_TX);
-	*/
-	
 	dma_I2C1_RX.dmaNum = 2;
 	dma_I2C1_RX.dmaChannelNum = 6;
 	dma_I2C1_RX.dmaPeriph = DMA2_Channel6;
 	dma_I2C1_RX.PeriphAddress = (uint32_t)&I2C1->RXDR;
 	dma_I2C1_RX.MemAddress = (uint32_t)&i2c_TestData_RX;
-	dma_I2C1_RX.NumDataToTransfer = 1;
+	dma_I2C1_RX.PeriphDataSize_Bits = (0x00);
+	dma_I2C1_RX.MemDataSize_Bits = (0x00);
+	dma_I2C1_RX.NumDataToTransfer = 2;
 	dma_I2C1_RX.selChannelPeriph_Bits = (0x05);
+	dma_I2C1_RX.Priority = DMAPriority_Medium;
 	dma_I2C1_RX.CircularMode = 1;
-	dma_I2C1_RX.MemIncrement = 0;
+	dma_I2C1_RX.MemIncrement = 1;
 	dma_I2C1_RX.PeriphIncrement = 0;
 	dma_I2C1_RX.ReadFromMemory = 0;
 	
 	dmaConfig(&dma_I2C1_RX);
+	dmaEnable(&dma_I2C1_RX);
 	
-	I2C_ReadBytes(EM7180_Address, EM7180_ROMVersion, 2);
+	EM7180_I2C_ReadBytes(EM7180_Address, EM7180_ROMVersion, 2);
 	
 	while(1)
 	{ 
@@ -114,40 +103,42 @@ int main()
 	}	
 }
 
-void I2C_ReadBytes(uint8_t SlaveAddress, uint8_t subAddress, uint8_t byteCount)
+void EM7180_I2C_ReadBytes(uint8_t SlaveAddress, uint8_t subAddress, uint8_t byteReadNum)
 {
 	//Set Slave Address
 	I2C1->CR2 &= ~(0b1111111<<1);				//clear SlaveAddress bits
 	I2C1->CR2 |= (SlaveAddress<<1);
-	
-	//send start condition
-	I2C1->CR2 |= I2C_CR2_START;
 	
 	//set Number of Bytes
 	I2C1->CR2 &= ~(I2C_CR2_NBYTES_Msk);		//clear NBYTES bits
 	I2C1->CR2 |= (1<<16);
 	
 	//set Transfer Direction
-	I2C1->CR2 &= ~(I2C_CR2_RD_WRN);				//Request Write
+	I2C1->CR2 &= ~(I2C_CR2_RD_WRN);				//Write
+	
+	//send start condition
+	I2C1->CR2 |= I2C_CR2_START;
 	
 	//write SubAddress
 	I2C1->TXDR = subAddress;
 	
+	//Since AUTOEND is enabled, STOP condition will be sent after NBYTES (1 in this case)
+	
+	//wait for Stop Condition
+	while(!(I2C1->ISR & I2C_ISR_STOPF));
 	
 	//set Number of Bytes
 	I2C1->CR2 &= ~(I2C_CR2_NBYTES_Msk);		//clear NBYTES bits
-	I2C1->CR2 |= (byteCount<<16);
+	I2C1->CR2 |= (byteReadNum<<16);
 	
 	//set Transfer Direction
-	I2C1->CR2 |= (I2C_CR2_RD_WRN);				//Request Read	
+	I2C1->CR2 |= (I2C_CR2_RD_WRN);				//Read		
 	
-	//enable DMA
-	dmaEnable(&dma_I2C1_RX);
+	//send start condition
+	I2C1->CR2 |= I2C_CR2_START;
 	
 	//wait for DMA_RX_TC Flag
-	while(DMA2->ISR & (1<<21))
-	{
-	}
+	while(DMA2->ISR & (1<<21));
 }
 
 /*
@@ -214,7 +205,7 @@ void UART2_DMA_TestSetup(void)
 	char rxData;
 	
 	//Enable DMA
-	DMA_Channel_T dma_UART2_TX;
+	DMA_T dma_UART2_TX;
 	dma_UART2_TX.dmaNum = 1;
 	dma_UART2_TX.dmaChannelNum = 7;
 	dma_UART2_TX.dmaPeriph = DMA1_Channel7;
@@ -229,7 +220,7 @@ void UART2_DMA_TestSetup(void)
 	
 	dmaConfig(&dma_UART2_TX);
 	
-	DMA_Channel_T dma_UART2_RX;
+	DMA_T dma_UART2_RX;
 	dma_UART2_RX.dmaNum = 1;
 	dma_UART2_RX.dmaChannelNum = 6;
 	dma_UART2_RX.dmaPeriph = DMA1_Channel6;
