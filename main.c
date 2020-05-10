@@ -21,7 +21,7 @@ GPIO_Type led3;
 EXTI_Type extiB1;
 
 //I2C-DMA Structs
-DMA_T dma_I2C1_TX;
+I2C_T i2c1;
 DMA_T dma_I2C1_RX;
 char i2c_TestData_RX[16];
 
@@ -32,15 +32,17 @@ void SystemClockInit(void);
 
 void EM7180_I2C_ReadBytes(uint8_t slaveAddr, uint8_t regAddr, uint8_t byteReadNum);
 
+
+uint32_t b1test;
+uint32_t b2test;
+
 int main()
 {	
 	SystemClockInit();		//Set SYSCLK @ 80MHz
+
+	UART2_DMA_TestSetup();
 	
-	
-	
-	//Enable I2C
-	RCC->APB1ENR1 |= RCC_APB1ENR1_I2C1EN;
-	
+	/*
 	//Config I2C GPIO
 	GPIO_Type gpio_I2C1_SDA;
 	gpio_I2C1_SDA.port = GPIOB;
@@ -64,8 +66,19 @@ int main()
 	
 	gpioInit(&gpio_I2C1_SCL);
 	
+	
+	//Setup I2C Peripheral
+	i2c1.i2cPeriph = I2C1;
+	i2c1.i2cNum = 1;
+	i2c1.speedMode = i2cSpeedMode_400khz;
+	i2c1.autoendEnabled = 1;
+	i2c1.dmaEnabled_Rx = 1;
+	i2c1.dmaEnabled_Tx = 0;
+	
+	i2cInit(&i2c1);	
+	
 	//Set I2C Speed
-	I2C1->TIMINGR = I2C_TIMINGR_100khz;
+	I2C1->TIMINGR = 0x10909CEC;
 	
 	//Enable DMA Requests
 	I2C1->CR1 |= I2C_CR1_RXDMAEN | I2C_CR1_TXDMAEN;
@@ -84,7 +97,7 @@ int main()
 	dma_I2C1_RX.memAddress = (uint32_t)&i2c_TestData_RX;
 	dma_I2C1_RX.periphDataSize_Bits = (0x00);
 	dma_I2C1_RX.memDataSize_Bits = (0x00);
-	dma_I2C1_RX.numTransfersPerRequest = 2;
+	dma_I2C1_RX.numTransfersPerRequest = 1;
 	dma_I2C1_RX.selChannelPeriph_Bits = (0x05);
 	dma_I2C1_RX.priority = DMAPriority_Medium;
 	dma_I2C1_RX.circMode = 1;
@@ -96,6 +109,7 @@ int main()
 	dmaEnable(&dma_I2C1_RX);
 	
 	EM7180_I2C_ReadBytes(EM7180_Address, EM7180_ROMVersion, 2);
+	*/
 	
 	while(1)
 	{ 
@@ -127,9 +141,15 @@ void EM7180_I2C_ReadBytes(uint8_t SlaveAddress, uint8_t subAddress, uint8_t byte
 	//wait for Stop Condition
 	while(!(I2C1->ISR & I2C_ISR_STOPF));
 	
-	//set Number of Bytes
+	//set I2C Number of Bytes
 	I2C1->CR2 &= ~(I2C_CR2_NBYTES_Msk);		//clear NBYTES bits
 	I2C1->CR2 |= (byteReadNum<<16);
+	
+	//set DMA Number of Bytes
+	dmaDisable(&dma_I2C1_RX);
+	dma_I2C1_RX.numTransfersPerRequest = byteReadNum;
+	dmaSetTransfersPerRequest(&dma_I2C1_RX);
+	dmaEnable(&dma_I2C1_RX);
 	
 	//set Transfer Direction
 	I2C1->CR2 |= (I2C_CR2_RD_WRN);				//Read		

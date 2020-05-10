@@ -1,6 +1,7 @@
 #ifndef USART_H
 #define USART_H
 
+#include "ClockControl.h"
 #include "stm32l432xx.h"
 
 typedef struct {
@@ -12,7 +13,6 @@ typedef struct {
 } USART_T;
 
 static void enUSARTClock(uint32_t usartNum);
-static uint32_t getUSARTClockSpeed(uint32_t usartNum);
 static void setBaudRate(USART_T* USARTConfig);		//USART must be disabled
 static void enUSART(USART_TypeDef* usartPeriph);
 

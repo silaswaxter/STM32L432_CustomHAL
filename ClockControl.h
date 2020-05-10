@@ -89,7 +89,7 @@ typedef struct SystemClock_Type {
 	
 	APBPrescaler_T APB1Prescaler;
 	APBPrescaler_T APB2Prescaler;
-	AHBPrescaler_T AHBPrescaler;
+	AHBPrescaler_T AHBPrescaler;						//Determines SystemCoreClock=HCLK
 } SystemClock_T;
 
 void setSystemClock(SystemClock_T* SystemClockConfig);
@@ -99,5 +99,6 @@ void setPLL(PLL_T* PLL_Config);
 static void setSYSCLKSource(ClockSource_T clockSource);
 ClockSource_T getSYSCLKSource(void);
 ClockSource_T getPLLClockSource(void);
+uint32_t getAPBCLK(uint32_t APBCLKNum);				//PCLKx
 
 #endif //CLOCK_CONTROL_H

@@ -1,8 +1,8 @@
 #include "DMA.h"
 
-static inline void enDMAClock(uint32_t DMA_Num)
+static inline void enDMAClock(uint32_t dmaNum)
 {
-	(DMA_Num == 1) ? (RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN) : (RCC->AHB1ENR |= RCC_AHB1ENR_DMA2EN);
+	(dmaNum == 1) ? (RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN) : (RCC->AHB1ENR |= RCC_AHB1ENR_DMA2EN);
 }
 
 static void selChannelPeriph(DMA_T* DMAConfig)

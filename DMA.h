@@ -30,7 +30,7 @@ typedef struct {
 	uint32_t readFromMem;							//When 1, dma: mem->periph (even when MEM2MEM or PER2PER is enabled [these are naming conventions for addresses])
 } DMA_T;
 
-static inline void enDMAClock(uint32_t DMA_Num);
+static inline void enDMAClock(uint32_t dmaNum);
 static void selChannelPeriph(DMA_T* DMAConfig);		//selects peripheral for channel	(e.g. usart2_rx or usart1_rx)
 
 void dmaConfig(DMA_T* DMAConfig);						//Config instead of Init because it doesn't enable periph 

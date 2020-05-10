@@ -36,9 +36,9 @@ void setSystemClock(SystemClock_T* SystemClockConfig)
 	//Config AMBA/HLCK
 	RCC->CFGR &= ~(RCC_CFGR_HPRE_Msk | RCC_CFGR_PPRE1_Msk
 								| RCC_CFGR_PPRE2_Msk);										//Reset AMBA Registers
-	RCC->CFGR |= SystemClockConfig->AHBPrescaler;
-	RCC->CFGR |= SystemClockConfig->APB1Prescaler;
-	RCC->CFGR |= SystemClockConfig->APB2Prescaler;
+	RCC->CFGR |= (SystemClockConfig->AHBPrescaler<<4);
+	RCC->CFGR |= (SystemClockConfig->APB1Prescaler<<8);
+	RCC->CFGR |= (SystemClockConfig->APB2Prescaler<<11);
 	
 	//Update SystemCoreClock for CMSIS Functions
 	SystemCoreClockUpdate();	
@@ -266,4 +266,35 @@ ClockSource_T getPLLClockSource(void)
 		return ClockSource_NotAvailable;
 	
 	//ELSE ERROR
+}
+
+uint32_t getAPBCLK(uint32_t APBCLKNum)				//PCLKx
+{
+	//Get APB1_Prescaler bits and format them
+	uint32_t PPRE_Bits;
+	if(APBCLKNum == 1)
+		PPRE_Bits = ((RCC->CFGR & RCC_CFGR_PPRE1_Msk)>>8);
+	
+	if(APBCLKNum == 2)
+		PPRE_Bits = ((RCC->CFGR & RCC_CFGR_PPRE2_Msk)>>11);
+	
+	//Convert bits to config
+	uint32_t PPRE_Setting = 0;
+	
+	if(PPRE_Bits == APB_1)
+		PPRE_Setting = 1;
+	
+	if(PPRE_Bits == APB_2)
+		PPRE_Setting = 2;
+	
+	if(PPRE_Bits == APB_4)
+		PPRE_Setting = 4;
+	
+	if(PPRE_Bits == APB_8)
+		PPRE_Setting = 8;
+	
+	if(PPRE_Bits == APB_16)
+		PPRE_Setting = 16;
+	
+	return SystemCoreClock/PPRE_Setting;
 }
